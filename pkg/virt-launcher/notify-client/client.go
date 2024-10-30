@@ -200,7 +200,7 @@ func (n *Notifier) SendDomainEvent(event watch.Event) error {
 	}
 
 	var response *notifyv1.Response
-	err = utilwait.PollImmediate(n.intervalTimeout, n.totalTimeout, func() (done bool, err error) {
+	err = utilwait.PollUntilContextTimeout(context.Background(), n.intervalTimeout, n.totalTimeout, true, func(ctx context.Context) (done bool, err error) {
 		n.connLock.Lock()
 		defer n.connLock.Unlock()
 
@@ -587,7 +587,7 @@ func (n *Notifier) SendK8sEvent(vmi *v1.VirtualMachineInstance, severity string,
 	}
 
 	var response *notifyv1.Response
-	err = utilwait.PollImmediate(n.intervalTimeout, n.totalTimeout, func() (done bool, err error) {
+	err = utilwait.PollUntilContextTimeout(context.Background(), n.intervalTimeout, n.totalTimeout, true, func(ctx context.Context) (done bool, err error) {
 		n.connLock.Lock()
 		defer n.connLock.Unlock()
 

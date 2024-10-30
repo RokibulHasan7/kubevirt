@@ -20,6 +20,7 @@
 package sriov
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -89,19 +90,19 @@ func newPCIAddressPoolWithNetworkStatusFromFile(path string) (*PCIAddressWithNet
 
 func readFileUntilNotEmpty(networkPCIMapPath string) ([]byte, error) {
 	var networkPCIMapBytes []byte
-	err := wait.PollImmediate(100*time.Millisecond, time.Second, func() (bool, error) {
+	err := wait.PollUntilContextTimeout(context.Background(), 100*time.Millisecond, time.Second, true, func(ctx context.Context) (bool, error) {
 		var err error
 		networkPCIMapBytes, err = os.ReadFile(networkPCIMapPath)
 		return len(networkPCIMapBytes) > 0, err
 	})
-	if errors.Is(err, wait.ErrWaitTimeout) {
+	if errors.Is(err, context.DeadlineExceeded) {
 		return nil, fmt.Errorf("%w: file is not populated with network-info", err)
 	}
 	return networkPCIMapBytes, err
 }
 
 func isFileEmptyAfterTimeout(err error, data []byte) bool {
-	return errors.Is(err, wait.ErrWaitTimeout) && len(data) == 0
+	return errors.Is(err, context.DeadlineExceeded) && len(data) == 0
 }
 
 func CreateHostDevicesFromIfacesAndPool(ifaces []v1.Interface, pool hostdevice.AddressPooler) ([]api.HostDevice, error) {

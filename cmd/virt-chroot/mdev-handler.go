@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -93,7 +94,7 @@ func isInterfaceAvailable(interfacePath string) bool {
 	connectionInterval := 1 * time.Second
 	connectionTimeout := 5 * time.Second
 
-	err := utilwait.PollImmediate(connectionInterval, connectionTimeout, func() (done bool, err error) {
+	err := utilwait.PollUntilContextTimeout(context.Background(), connectionInterval, connectionTimeout, true, func(ctx context.Context) (done bool, err error) {
 		_, err = os.Stat(interfacePath)
 		if err != nil {
 			return false, nil

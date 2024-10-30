@@ -2387,7 +2387,7 @@ spec:
 				Expect(err).ToNot(HaveOccurred())
 				fetchVMI := matcher.ThisVMI(vmi)
 				psaRelatedErrorDetected := false
-				err = wait.PollImmediate(time.Second, 30*time.Second, func() (done bool, err error) {
+				err = wait.PollUntilContextTimeout(context.Background(), time.Second, 30*time.Second, true, func(ctx context.Context) (done bool, err error) {
 					vmi, err := fetchVMI()
 					if err != nil {
 						return done, err

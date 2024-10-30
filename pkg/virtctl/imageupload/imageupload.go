@@ -520,7 +520,7 @@ func (c *command) getUploadToken() (string, error) {
 func (c *command) waitDvUploadScheduled() error {
 	loggedStatus := false
 	//
-	err := wait.PollImmediate(uploadReadyWaitInterval, time.Duration(c.uploadPodWaitSecs)*time.Second, func() (bool, error) {
+	err := wait.PollUntilContextTimeout(context.Background(), uploadReadyWaitInterval, time.Duration(c.uploadPodWaitSecs)*time.Second, true, func(ctx context.Context) (bool, error) {
 		dv, err := c.client.CdiClient().CdiV1beta1().DataVolumes(c.namespace).Get(context.Background(), c.name, metav1.GetOptions{})
 
 		if err != nil {
@@ -562,7 +562,7 @@ func (c *command) waitDvUploadScheduled() error {
 func (c *command) waitUploadServerReady() error {
 	loggedStatus := false
 
-	err := wait.PollImmediate(uploadReadyWaitInterval, time.Duration(c.uploadPodWaitSecs)*time.Second, func() (bool, error) {
+	err := wait.PollUntilContextTimeout(context.Background(), uploadReadyWaitInterval, time.Duration(c.uploadPodWaitSecs)*time.Second, true, func(ctx context.Context) (bool, error) {
 		pvc, err := c.client.CoreV1().PersistentVolumeClaims(c.namespace).Get(context.Background(), c.name, metav1.GetOptions{})
 		if err != nil {
 			// DataVolume controller may not have created the PVC yet
@@ -598,7 +598,7 @@ func (c *command) waitUploadServerReady() error {
 }
 
 func waitUploadProcessingComplete(client kubernetes.Interface, namespace, name string, interval, timeout time.Duration) error {
-	err := wait.PollImmediate(interval, timeout, func() (bool, error) {
+	err := wait.PollUntilContextTimeout(context.Background(), interval, timeout, true, func(ctx context.Context) (bool, error) {
 		pvc, err := client.CoreV1().PersistentVolumeClaims(namespace).Get(context.Background(), name, metav1.GetOptions{})
 		if err != nil {
 			return false, err

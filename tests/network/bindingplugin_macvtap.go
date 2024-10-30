@@ -208,7 +208,7 @@ func waitForPodCompleted(podNamespace string, podName string) error {
 
 func waitVMMacvtapIfaceIPReport(vmi *v1.VirtualMachineInstance, macAddress string, timeout time.Duration) (string, error) {
 	var vmiIP string
-	err := wait.PollImmediate(time.Second, timeout, func() (done bool, err error) {
+	err := wait.PollUntilContextTimeout(context.Background(), time.Second, timeout, true, func(ctx context.Context) (done bool, err error) {
 		vmi, err := kubevirt.Client().VirtualMachineInstance(vmi.Namespace).Get(context.Background(), vmi.Name, metav1.GetOptions{})
 		if err != nil {
 			return false, err

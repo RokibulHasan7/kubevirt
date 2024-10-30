@@ -362,7 +362,7 @@ func downloadMemoryDump(namespace, vmName string, virtClient kubecli.KubevirtCli
 
 func waitForMemoryDump(virtClient kubecli.KubevirtClient, namespace, vmName string, interval, timeout time.Duration) (string, error) {
 	var claimName string
-	err := wait.PollImmediate(interval, timeout, func() (bool, error) {
+	err := wait.PollUntilContextTimeout(context.Background(), interval, timeout, true, func(ctx context.Context) (bool, error) {
 		vm, err := virtClient.VirtualMachine(namespace).Get(context.Background(), vmName, metav1.GetOptions{})
 		if err != nil {
 			return false, err

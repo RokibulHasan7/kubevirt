@@ -714,7 +714,7 @@ func deleteVMI(vmi *v1.VirtualMachineInstance) error {
 	}
 
 	const timeout = 30 * time.Second
-	return wait.PollImmediate(1*time.Second, timeout, func() (done bool, err error) {
+	return wait.PollUntilContextTimeout(context.Background(), 1*time.Second, timeout, true, func(ctx context.Context) (done bool, err error) {
 		_, err = virtClient.VirtualMachineInstance(vmi.Namespace).Get(context.Background(), vmi.Name, k8smetav1.GetOptions{})
 		if k8serrors.IsNotFound(err) {
 			return true, nil
