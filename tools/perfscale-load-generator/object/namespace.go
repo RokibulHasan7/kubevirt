@@ -74,7 +74,7 @@ func CleanupNamespaces(virtCli kubecli.KubevirtClient, timeout time.Duration, li
 // WaitForDeleteNamespaces waits to all namespaces with the given selector be deleted
 func WaitForDeleteNamespaces(virtCli kubecli.KubevirtClient, timeout time.Duration, listOpts metav1.ListOptions) error {
 	return wait.PollUntilContextTimeout(context.Background(), 10*time.Second, timeout, true, func(ctx context.Context) (bool, error) {
-		ns, err := virtCli.CoreV1().Namespaces().List(context.TODO(), listOpts)
+		ns, err := virtCli.CoreV1().Namespaces().List(ctx, listOpts)
 		if err != nil {
 			return false, err
 		}

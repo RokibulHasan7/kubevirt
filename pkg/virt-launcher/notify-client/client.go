@@ -210,7 +210,7 @@ func (n *Notifier) SendDomainEvent(event watch.Event) error {
 			return false, nil
 		}
 
-		ctx, cancel := context.WithTimeout(context.Background(), n.sendTimeout)
+		ctx, cancel := context.WithTimeout(ctx, n.sendTimeout)
 		defer cancel()
 		response, err = n.v1client.HandleDomainEvent(ctx, &request)
 
@@ -597,7 +597,7 @@ func (n *Notifier) SendK8sEvent(vmi *v1.VirtualMachineInstance, severity string,
 			return false, nil
 		}
 
-		ctx, cancel := context.WithTimeout(context.Background(), n.sendTimeout)
+		ctx, cancel := context.WithTimeout(ctx, n.sendTimeout)
 		defer cancel()
 		response, err = n.v1client.HandleK8SEvent(ctx, &request)
 
