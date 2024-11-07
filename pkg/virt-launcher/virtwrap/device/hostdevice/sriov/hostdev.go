@@ -90,7 +90,7 @@ func newPCIAddressPoolWithNetworkStatusFromFile(path string) (*PCIAddressWithNet
 
 func readFileUntilNotEmpty(networkPCIMapPath string) ([]byte, error) {
 	var networkPCIMapBytes []byte
-	err := wait.PollUntilContextTimeout(context.Background(), 100*time.Millisecond, time.Second, true, func(ctx context.Context) (bool, error) {
+	err := wait.PollUntilContextTimeout(context.Background(), 100*time.Millisecond, time.Second, true, func(_ context.Context) (bool, error) {
 		var err error
 		networkPCIMapBytes, err = os.ReadFile(networkPCIMapPath)
 		return len(networkPCIMapBytes) > 0, err

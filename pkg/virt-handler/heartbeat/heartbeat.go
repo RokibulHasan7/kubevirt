@@ -106,7 +106,7 @@ func (h *HeartBeat) labelNodeUnschedulable() (done chan struct{}) {
 // waitForDevicePlugins gives the device plugins additional time to successfully connect to the kubelet.
 // If the connection can not be established it just delays the heartbeat start for devicePluginWaitTimeout.
 func (h *HeartBeat) waitForDevicePlugins(stopCh chan struct{}) {
-	_ = utilwait.PollUntilContextTimeout(context.Background(), h.devicePluginPollIntervall, h.devicePluginWaitTimeout, true, func(ctx context.Context) (done bool, err error) {
+	_ = utilwait.PollUntilContextTimeout(context.Background(), h.devicePluginPollIntervall, h.devicePluginWaitTimeout, true, func(_ context.Context) (done bool, err error) {
 		select {
 		case <-stopCh:
 			return true, nil

@@ -90,7 +90,7 @@ func startCmdServer(socketPath string,
 	// PollImmediate breaks the poll loop when bool or err are returned OR if timeout occurs.
 	//
 	// Timing out causes an error to be returned
-	err = utilwait.PollUntilContextTimeout(context.Background(), 1*time.Second, 15*time.Second, true, func(ctx context.Context) (bool, error) {
+	err = utilwait.PollUntilContextTimeout(context.Background(), 1*time.Second, 15*time.Second, true, func(_ context.Context) (bool, error) {
 		client, err := cmdclient.NewClient(socketPath)
 		if err != nil {
 			return false, nil

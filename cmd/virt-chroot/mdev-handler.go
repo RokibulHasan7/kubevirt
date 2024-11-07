@@ -94,7 +94,7 @@ func isInterfaceAvailable(interfacePath string) bool {
 	connectionInterval := 1 * time.Second
 	connectionTimeout := 5 * time.Second
 
-	err := utilwait.PollUntilContextTimeout(context.Background(), connectionInterval, connectionTimeout, true, func(ctx context.Context) (done bool, err error) {
+	err := utilwait.PollUntilContextTimeout(context.Background(), connectionInterval, connectionTimeout, true, func(_ context.Context) (done bool, err error) {
 		_, err = os.Stat(interfacePath)
 		if err != nil {
 			return false, nil

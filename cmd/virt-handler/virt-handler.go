@@ -453,7 +453,7 @@ func (app *virtHandlerApp) Run() {
 		// This triggers the migration proxy to no longer accept new connections
 		migrationProxy.InitiateGracefulShutdown()
 
-		err := utilwait.PollUntilContextTimeout(context.Background(), connectionInterval, connectionTimeout, true, func(ctx context.Context) (done bool, err error) {
+		err := utilwait.PollUntilContextTimeout(context.Background(), connectionInterval, connectionTimeout, true, func(_ context.Context) (done bool, err error) {
 			count := migrationProxy.OpenListenerCount()
 			if count > 0 {
 				log.Log.Infof("waiting for %d migration listeners to terminate", count)
